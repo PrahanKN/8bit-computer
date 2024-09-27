@@ -1,1 +1,32 @@
+module b_register(
+    input wire [7:0] I,
+    input wire clock,
+    input wire Lb,
+    input wire clear,
+    output wire [7:0] Q
+);
 
+reg [7:0] I_bo;
+reg [7:0] Q_tmp;
+reg [7:0] Q_dup;
+
+always @(posedge clear or posedge clock) begin
+    if (clear) begin
+        Q_tmp <= 8'b00000000;
+    end else begin
+        Q_tmp <= I_bo;
+    end
+end
+
+assign Q = Q_tmp;
+assign Q_dup = Q_tmp;
+
+always @(Lb) begin
+    if (Lb == 0) begin
+        I_bo <= I;
+    end else begin
+        I_bo <= Q_dup;
+    end
+end
+
+endmodule
