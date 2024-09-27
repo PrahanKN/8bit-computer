@@ -1,1 +1,52 @@
+module RAM #(
+    parameter width = 8,
+    parameter depth = 16,
+    parameter addr = 4
+) (
+    input wire Clock,
+    input wire Clear,
+    input wire Enable,
+    input wire Read,
+    input wire Write,
+    input wire [addr-1:0] Read_Addr,
+    input wire [addr-1:0] Write_Addr,
+    input wire [width-1:0] Data_in,
+    output wire [width-1:0] Data_out
+);
 
+reg [width-1:0] tmp_ram [depth-1:0];
+
+// Read Functional Section
+always @(posedge Clock) begin
+    if (Enable && Read) begin
+        Data_out <= tmp_ram[Read_Addr];
+    end else begin
+        Data_out <= {width{1'bZ}};
+    end
+end
+
+// Write Functional Section
+always @(posedge Clock) begin
+    if (Clear) begin
+        tmp_ram[0] <= 8'b00000000;
+        tmp_ram[1] <= 8'b00000000;
+        tmp_ram[2] <= 8'b00000000;
+        tmp_ram[3] <= 8'b00000000;
+        tmp_ram[4] <= 8'b00000000;
+        tmp_ram[5] <= 8'b00000000;
+        tmp_ram[6] <= 8'b00000000;
+        tmp_ram[7] <= 8'b00000000;
+        tmp_ram[8] <= 8'b00000000;
+        tmp_ram[9] <= 8'b00000000;
+        tmp_ram[10] <= 8'b00000000;
+        tmp_ram[11] <= 8'b00000000;
+        tmp_ram[12] <= 8'b00000000;
+        tmp_ram[13] <= 8'b00000000;
+        tmp_ram[14] <= 8'b00000000;
+        tmp_ram[15] <= 8'b00000000;
+    end else if (Enable && Write) begin
+        tmp_ram[Write_Addr] <= Data_in;
+    end
+end
+
+endmodule
