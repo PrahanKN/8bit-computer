@@ -1,1 +1,45 @@
+module accumulator(
+    input wire [7:0] I,
+    input wire clock,
+    input wire La,
+    input wire Ea,
+    input wire clear,
+    output wire [7:0] Qas,
+    output wire [7:0] Qb
+);
 
+reg [7:0] I_bo;
+reg [7:0] Q_bi;
+reg [7:0] Q_tmp;
+reg [7:0] Q_dup;
+
+always @(posedge clear or posedge clock) begin
+    if (clear) begin
+        Q_tmp <= 8'b00000000;
+    end else begin
+        Q_tmp <= I_bo;
+    end
+end
+
+assign Q_bi = Q_tmp;
+assign Q_dup = Q_tmp;
+
+always @(La) begin
+    if (La == 0) begin
+        I_bo <= I;
+    end else begin
+        I_bo <= Q_dup;
+    end
+end
+
+always @(Ea) begin
+    if (Ea) begin
+        Qb <= Q_bi;
+    end else begin
+        Qb <= 8'bZZZZZZZZ;
+    end
+end
+
+assign Qas = Q_bi;
+
+endmodule
