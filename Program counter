@@ -1,0 +1,32 @@
+module Program_counter(
+    input wire clock,
+    input wire Ep,
+    input wire clear,
+    input wire count,
+    output wire [3:0] Q
+);
+
+reg [3:0] Pre_Q;
+reg [3:0] Q_bin;
+
+always @(posedge clock or posedge clear) begin
+    if (clear) begin
+        Pre_Q <= 4'b0000;
+        Q_bin <= 4'b0000;
+    end else begin
+        if (count) begin
+            Pre_Q <= Pre_Q + 1;
+        end
+        Q_bin <= Pre_Q;
+    end
+end
+
+always @(Ep) begin
+    if (Ep) begin
+        Q <= Q_bin;
+    end else begin
+        Q <= 4'bZZZZ;
+    end
+end
+
+endmodule
