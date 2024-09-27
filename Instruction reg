@@ -1,1 +1,48 @@
 
+module instruction_register(
+    input wire [7:0] I,
+    input wire clock,
+    input wire Li,
+    input wire Ei,
+    input wire clear,
+    output wire [3:0] Qc,
+    output wire [3:0] Qb
+);
+
+reg [3:0] Qc_tmp, Qb_tmp;
+
+reg [7:0] I_bo;
+reg [7:0] Q_bi;
+reg [7:0] Q_tmp;
+reg [7:0] Q_dup;
+
+always @(posedge clear or posedge clock) begin
+    if (clear) begin
+        Q_tmp <= 8'b00000000;
+    end else begin
+        Q_tmp <= I_bo;
+    end
+end
+
+assign Q_bi = Q_tmp;
+assign Q_dup = Q_tmp;
+
+always @(Li) begin
+    if (Li == 0) begin
+        I_bo <= I;
+    end else begin
+        I_bo <= Q_dup;
+    end
+end
+
+always @(*) begin
+    if (Ei == 0) begin
+        Qb <= Q_bi[3:0];
+    end else begin
+        Qb <= 4'bZZZZ;
+    end
+end
+
+assign Qc = Q_bi[7:4];
+
+endmodule
