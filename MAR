@@ -1,0 +1,32 @@
+module MAR(
+    input wire [3:0] I,
+    input wire clock,
+    input wire Lm,
+    input wire clear,
+    output wire [3:0] Q
+);
+
+reg [3:0] I_bo;
+reg [3:0] Q_tmp;
+reg [3:0] Q_dup;
+
+always @(posedge clear or posedge clock) begin
+    if (clear) begin
+        Q_tmp <= 4'b0000;
+    end else begin
+        Q_tmp <= I_bo;
+    end
+end
+
+assign Q = Q_tmp;
+assign Q_dup = Q_tmp;
+
+always @(Lm) begin
+    if (Lm == 0) begin
+        I_bo <= I;
+    end else begin
+        I_bo <= Q_dup;
+    end
+end
+
+endmodule
