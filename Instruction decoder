@@ -1,0 +1,19 @@
+module instruction_decoder(
+    input wire I7,
+    input wire I6,
+    input wire I5,
+    input wire I4,
+    output wire LDA,
+    output wire ADD,
+    output wire SUB,
+    output wire OUTPUT,
+    output wire HLT
+);
+
+assign LDA = I7 & ~I6 & I5 & I4;
+assign ADD = ~I7 & I6 & ~I5 & I4;
+assign SUB = ~I7 & I6 & I5 & I4;
+assign OUTPUT = ~I7 & ~I6 & ~I5 & ~I4;
+assign HLT = ~I7 & I6 & ~I5 & ~I4;
+
+endmodule
