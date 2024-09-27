@@ -1,1 +1,54 @@
+module controller_sequencer(
+    input wire CLK,
+    input wire [3:0] I,
+    output wire Cp,
+    output wire Ep,
+    output wire Lm,
+    output wire CE,
+    output wire Li,
+    output wire Ei,
+    output wire La,
+    output wire Ea,
+    output wire Su,
+    output wire Eu,
+    output wire Lb,
+    output wire Lo,
+    output wire HALT
+);
+
+wire [6:1] T;
+wire LDA, ADD, SUB, OUTPUT, HLT;
+
+instruction_decoder ID(
+    .I7(I[3]),
+    .I6(I[2]),
+    .I5(I[1]),
+    .I4(I[0]),
+    .LDA(LDA),
+    .ADD(ADD),
+    .SUB(SUB),
+    .OUTPUT(OUTPUT),
+    .HLT(HLT)
+);
+
+ring_counter RC(
+    .CLK(CLK),
+    .T(T)
+);
+
+assign Cp = T[1];
+assign Ep = T[0];
+assign Lm = ~(T[3] & LDA | T[3] & ADD | T[3] & SUB | T[0]);
+assign CE = ~(T[4] & LDA | T[4] & ADD | T[4] & SUB | T[2]);
+assign Li = ~T[2];
+assign Ei = ~(T[3] & LDA | T[3] & ADD | T[3] & SUB);
+assign La = ~(T[4] & LDA | T[5] & ADD | T[5] & SUB);
+assign Ea = T[3] & OUTPUT;
+assign Su = T[5] & SUB;
+assign Eu = T[5] & ADD | T[5] & SUB;
+assign Lb = ~(T[4] & ADD | T[4] & SUB);
+assign Lo = T[3] nand OUTPUT;
+assign HALT = HLT;
+
+endmodule
 
