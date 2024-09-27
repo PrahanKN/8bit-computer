@@ -1,0 +1,30 @@
+module ring_counter(
+    input wire CLK,
+    inout wire [6:1] T
+);
+
+reg [2:0] selector;
+reg [30:0] count;
+
+reg [6:0] T_Temp;
+reg [6:0] T_dup;
+
+always @(posedge CLK) begin
+    if (T == 7'b0000001) begin
+        T <= 7'b0000010;
+    end else if (T == 7'b0000010) begin
+        T <= 7'b0000100;
+    end else if (T == 7'b0000100) begin
+        T <= 7'b0001000;
+    end else if (T == 7'b0001000) begin
+        T <= 7'b0010000;
+    end else if (T == 7'b0010000) begin
+        T <= 7'b0100000;
+    end else if (T == 7'b0100000) begin
+        T <= 7'b1000000;
+    end else if (T == 7'b1000000) begin
+        T <= 7'b0000001;
+    end
+end
+
+endmodule
